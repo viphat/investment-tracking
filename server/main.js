@@ -1,14 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import dotenv from 'dotenv'
-// import { InvestingRecords, Categories, Tags } from '/imports/api/databaseSchema';
-import { fetchCategories } from '/imports/api/notion'
+import { Categories, Tags } from '/imports/api/databaseSchema';
+import { fetchMetadata, updateDatabaseLastUpdateTimestamp } from '/imports/api/notion'
+import '/imports/api/methods'
 
 Meteor.startup(() => {
   dotenv.config({
     path: `${process.env.PWD}/.env`
   });
 
-  console.log(process.env.NOTION_API_VERSION)
-
-  fetchCategories()
+  if (Categories.find().count() === 0 || Tags.find().count() === 0) {
+    fetchMetadata()
+    updateDatabaseLastUpdateTimestamp()
+  }
 });
