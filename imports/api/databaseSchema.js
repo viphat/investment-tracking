@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
-export const InvestingRecords = new Mongo.Collection('investingRecords');
+export const InvestmentRecords = new Mongo.Collection('investingRecords');
 
 const categorySchema = new SimpleSchema({
   _id: { type: String },
@@ -15,11 +15,11 @@ const tagSchema = new SimpleSchema({
   color: { type: String }
 })
 
-InvestingRecords.schema = new SimpleSchema({
+InvestmentRecords.schema = new SimpleSchema({
   _id: { type: String },
-  category: { type: categorySchema },
-  tags: { type: Array, optional: true },
-  "tags.$": { type: tagSchema },
+  categoryId: { type: String },
+  tagIds: { type: Array, optional: true },
+  "tagIds.$": { type: String },
   itemName: { type: String },
   amount: { type: Number },
   date: { type: String },

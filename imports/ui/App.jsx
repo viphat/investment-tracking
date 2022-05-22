@@ -12,7 +12,9 @@ export const App = () => {
       if (err) {
         alert(err)
       } else {
-        setIsLoading(false)
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 10000)
       }
     })
   }
@@ -23,7 +25,7 @@ export const App = () => {
         <h1 className='py-8 text-3xl text-red-500 text-center'>Dương Đào Family Investment Tracking Application</h1>
 
         <DatabaseInfo />
-        <button type='button' className={`display-block inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${ isLoading ? 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500' } focus:outline-none focus:ring-2 focus:ring-offset-2`} onClick={syncWithNotion}>Sync with Notion</button>
+        <button disabled={isLoading} type='button' className={`display-block inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${ isLoading ? 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500' } focus:outline-none focus:ring-2 focus:ring-offset-2`} onClick={syncWithNotion}>Sync with Notion</button>
       </div>
     </div>
   )
