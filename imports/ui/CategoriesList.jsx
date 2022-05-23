@@ -7,7 +7,7 @@ export const CategoriesList = () => {
   const categories = useTracker(() => Categories.find({}).fetch())
 
   return (
-    <div className='my-8'>
+    <div className='mb-8'>
       <div className='flex flex-wrap'>
         {
           categories.map((category) => (

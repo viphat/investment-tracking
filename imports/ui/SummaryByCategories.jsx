@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+
 import { Categories, KeyValueStore } from '/imports/api/databaseSchema';
-import { tailwindColorMapping, numberWithCommas } from './App'
+import { tailwindColorMapping, hightChartsColorMapping, numberWithCommas } from './App'
 
 export const getTotalByCategory = (category) => {
   var record = KeyValueStore.findOne({ key: `sum-${category['_id']}` })
@@ -12,6 +15,7 @@ export const getTotalByCategory = (category) => {
 export const SummaryByCategories = () => {
   const [total, setTotal] = useState(0)
   const [categories, setCategories] = useState([])
+  const [highChartsOptions, setHighChartsOptions] = useState({})
   const categoriesFromDB = useTracker(() => Categories.find({ name: { $nin: ['Insurance'] } }).fetch())
 
   useEffect(() => {
@@ -36,9 +40,55 @@ export const SummaryByCategories = () => {
       })
 
       setTotal(t)
-      setCategories(arr.sort((a, b) => b.total - a.total))
+      const sortedArr = arr.sort((a, b) => b.total - a.total)
+      setCategories(sortedArr)
+
+      const highChartsData = sortedArr.map((category) => {
+        return {
+          name: category.name,
+          y: parseFloat(category.percent),
+          color: hightChartsColorMapping(category.color),
+        }
+      })
+
+      if (highChartsData.length > 0) {
+        highChartsData[0]['selected'] = true
+        highChartsData[0]['sliced'] = true
+
+        const options = {
+          title: {
+            text: 'Summary'
+          },
+          chart: {
+            type: 'pie',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+            }
+          },
+          series: [{
+            name: 'Categories',
+            colorByPoint: true,
+            data: highChartsData
+          }]
+        }
+
+        setHighChartsOptions(options)
+      }
     }
-  }, [categoriesFromDB])
+  }, [categoriesFromDB, setHighChartsOptions, setCategories, setTotal])
 
   return (
     <div className="my-8 flex flex-col">
@@ -73,6 +123,15 @@ export const SummaryByCategories = () => {
           </div>
         </div>
       </div>
+
+      {highChartsOptions && (
+        <div className='my-8 w-full flex justify-center items-center'>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={highChartsOptions}
+          />
+        </div>
+      )}
     </div>
   )
 };
