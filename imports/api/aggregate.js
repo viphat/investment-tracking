@@ -9,11 +9,16 @@ export const calculateAndUpdateTotalSum = async () => {
 }
 
 export const calculateAndUpdateCategorySum = async (category) => {
-  console.log(category)
-
   const pipeline = [{ $match: { categoryId: category['_id'] } }, { $group: { _id: null, total: { $sum: "$amount" } }}];
 
   var result = InvestmentRecords.aggregate(pipeline);
 
   KeyValueStore.update({ key: `sum-${category['_id']}` }, { key: `sum-${category['_id']}`, value: result[0]['total'] }, { upsert: true})
+}
+
+export const clearDatabase = async () => {
+  Categories.remove({})
+  Tags.remove({})
+  InvestmentRecords.remove({})
+  KeyValueStore.remove({})
 }

@@ -16,7 +16,7 @@ export const SummaryByCategories = () => {
   const [total, setTotal] = useState(0)
   const [categories, setCategories] = useState([])
   const [highChartsOptions, setHighChartsOptions] = useState({})
-  const categoriesFromDB = useTracker(() => Categories.find({ name: { $nin: ['Insurance'] } }).fetch())
+  const categoriesFromDB = useTracker(() => Categories.find().fetch())
 
   useEffect(() => {
     if (categories.length === 0) {

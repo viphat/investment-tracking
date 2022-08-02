@@ -98,6 +98,20 @@ export const App = () => {
     })
   }
 
+  const clearDatabase = () => {
+    setIsLoading(true)
+
+    Meteor.call('data.clear', {}, (err, res) => {
+      if (err) {
+        alert(err)
+      } else {
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 10000)
+      }
+    })
+  }
+
   const dataAggregate = () => {
     setIsLoading(true)
 
@@ -121,6 +135,8 @@ export const App = () => {
         <button disabled={isLoading} type='button' className={`display-block inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${ isLoading ? 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500' } focus:outline-none focus:ring-2 focus:ring-offset-2`} onClick={syncWithNotion}>Sync with Notion</button>
 
         <button disabled={isLoading} type='button' className={`display-block ml-4 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${ isLoading ? 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500' : 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500' } focus:outline-none focus:ring-2 focus:ring-offset-2`} onClick={dataAggregate}>Data Aggregation</button>
+
+        <button disabled={isLoading} type='button' className={`display-block ml-4 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${ isLoading ? 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500' : 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500' } focus:outline-none focus:ring-2 focus:ring-offset-2`} onClick={clearDatabase}>Clear Database</button>
 
         <hr className='my-8'/>
 
